@@ -9,14 +9,25 @@ function App() {
   const [search, setSearch] = useState("");
   const [suggestedElements, setSuggestedElements] = useState([]);
   const [showSuggested, setShowSuggested] = useState(false);
+  const [coords, setCoords] = useState([0, 0]);
+  const [currCenter, setCurrCenter] = useState([0, 0]);
+  const apiSuggested = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?f=json&text=${search}`;
+  const apiFind = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&SingleLine=`;
 
-  const api = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?f=json&text=${search}`;
+  function formatFind(text) {
+    return apiFind + encodeURIComponent(text);
+  }
+
+  useEffect(() => {
+    setCurrCenter(coords);
+  }, [coords]);
 
   useEffect(() => {
     async function fetchAdress() {
       try {
-        let resp = await fetch(api);
+        let resp = await fetch(apiSuggested);
         let data = await resp.json();
+
         setSuggested(data);
       } catch (err) {
         console.log(err);
@@ -35,6 +46,7 @@ function App() {
             text={item.text}
             setSearch={setSearch}
             setShowSuggested={setShowSuggested}
+            setCoords={setCoords}
           />
         );
       })
@@ -45,23 +57,31 @@ function App() {
     setSearch(e.target.value);
     setShowSuggested(true);
   }
-  let long = 70;
+
   return (
     <div className="site-wrapper">
       <div className="input-container">
-        <input
-          type="text"
-          value={search}
-          onChange={handleChange}
-          placeholder="Въведете адрес..."
-        />
-        <img src={searchImg} alt="search" className="search-img" />
+        <form action="">
+          <input
+            type="text"
+            value={search}
+            onChange={handleChange}
+            placeholder="Въведете адрес..."
+          />
+          <button>
+            {" "}
+            <img src={searchImg} alt="search" className="search-img" />
+          </button>
+        </form>
       </div>
 
-      {showSuggested && (
-        <div className="suggested-elements">{suggestedElements}</div>
+      {showSuggested && search && (
+        <div className="suggested-elements-outer">
+          <div className="suggested-elements">{suggestedElements}</div>
+        </div>
       )}
-      <EmbeddedMap longitude={100} latitude={0} />
+
+      <EmbeddedMap name={search} initialCenter={currCenter} />
     </div>
   );
 }

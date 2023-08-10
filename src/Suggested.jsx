@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-import PopupCoords from "./PopupCoords";
-
 export default function Suggested({
   text,
   setShowSuggested,
-
+  setCoords,
   setSearch,
 }) {
   const apiAdress = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&SingleLine=${encodeURIComponent(
@@ -14,10 +11,10 @@ export default function Suggested({
   async function getAdress() {
     setShowSuggested(false);
     try {
-      // const resp = await fetch(apiAdress);
-      // const data = await resp.json();
-      // console.log(data);
-
+      const resp = await fetch(apiAdress);
+      const data = await resp.json();
+      console.log(data.candidates[0].location);
+      setCoords([data.candidates[0].location.y, data.candidates[0].location.x]);
       setSearch(text);
     } catch (err) {
       console.log(err);
@@ -26,7 +23,6 @@ export default function Suggested({
   return (
     <h4 className="suggested-text" onClick={getAdress}>
       {text}
-      {/* {popupOpen && <PopupCoords coordsX={adress?.location?.x} coordsY={adress?.location?.y} />} */}
     </h4>
   );
 }

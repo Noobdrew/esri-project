@@ -10,19 +10,22 @@ h4 {
   margin: 0;
 }
 
+body {
+  background-color: aliceblue;
+}
+
 .site-wrapper {
-  margin-top: 30px;
+  position: relative;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 .input-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  margin-top: 50px;
 }
 
 .input-container input {
@@ -35,23 +38,52 @@ h4 {
   width: 20px;
 }
 
+.suggested-elements-outer {
+  z-index: 1;
+  position: absolute;
+  top: 75px;
+  left: 0;
+  right: 0;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+form>button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
 .suggested-elements {
-  margin-top: 20px;
-  padding: 15px;
-  min-width: 300px;
-  min-height: 100px;
-  border-radius: 15px;
-  background-color: rgb(238, 233, 233);
+  margin: auto;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 500px;
+  background-color: white
 }
 
 .suggested-text {
   padding: 5px;
   cursor: pointer;
+  border-radius: 10px;
   font-weight: 500;
   margin-bottom: 10px;
 }
 
 .suggested-text:hover {
   background-color: rgb(212, 212, 212);
-  ;
+
+}
+
+.map-outer {
+  z-index: 0;
+  margin-top: 50px;
+  width: 100%;
+  height: 88vh;
+  margin-top: auto;
 }

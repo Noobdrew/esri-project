@@ -1,18 +1,28 @@
-export default function EmbeddedMap({ latitude, longitude }) {
-  //   const googleMapsUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDE2JzUyLjkiTiAxMDLCsDIwJzU4LjQiVw!5e0!3m2!1sen!2sus!4v1562149950983!5m2!1sen!2sus`;
-  const googleMapsUrl = `https://www.google.com/maps/embed/v1/view?&center=${latitude},${longitude}&zoom=15`;
+import React, { useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+
+export default function EmbeddedMap({ initialCenter, name }) {
+  function ChangeView({ center, zoom }) {
+    const map = useMap();
+    map.setView(center, zoom);
+    return null;
+  }
 
   return (
-    <div>
-      <h1>My Embedded Google Map</h1>
-      <iframe
-        width="600"
-        height="450"
-        style={{ border: 0 }}
-        src={googleMapsUrl}
-        allowFullScreen
-        title="Embedded Google Map"
-      ></iframe>
-    </div>
+    <MapContainer center={initialCenter} zoom={13} className="map-outer">
+      <ChangeView center={initialCenter} zoom={13} />
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {
+        <Marker position={initialCenter}>
+          <Popup>{name}</Popup>
+        </Marker>
+      }
+
+      {/* Add other map components like markers, popups, etc. */}
+    </MapContainer>
   );
 }
