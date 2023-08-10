@@ -1,35 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import searchImg from "./assets/search-img.png";
+import "./App.css";
+import Suggested from "./Suggested";
+import EmbeddedMap from "./EmbededMap";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [suggested, setSuggested] = useState([]);
+  const [search, setSearch] = useState("");
+  const [suggestedElements, setSuggestedElements] = useState([]);
+  const [showSuggested, setShowSuggested] = useState(false);
 
+  const api = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?f=json&text=${search}`;
+
+  useEffect(() => {
+    async function fetchAdress() {
+      try {
+        let resp = await fetch(api);
+        let data = await resp.json();
+        setSuggested(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchAdress();
+  }, [search]);
+
+  useEffect(() => {
+    setSuggestedElements(
+      suggested?.suggestions?.map((item) => {
+        return (
+          <Suggested
+            key={item.magicKey}
+            text={item.text}
+            setSearch={setSearch}
+            setShowSuggested={setShowSuggested}
+          />
+        );
+      })
+    );
+  }, [suggested]);
+
+  function handleChange(e) {
+    setSearch(e.target.value);
+    setShowSuggested(true);
+  }
+  let long = 70;
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="site-wrapper">
+      <div className="input-container">
+        <input
+          type="text"
+          value={search}
+          onChange={handleChange}
+          placeholder="Въведете адрес..."
+        />
+        <img src={searchImg} alt="search" className="search-img" />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      {showSuggested && (
+        <div className="suggested-elements">{suggestedElements}</div>
+      )}
+      <EmbeddedMap longitude={100} latitude={0} />
+    </div>
+  );
 }
 
-export default App
+export default App;
