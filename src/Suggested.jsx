@@ -3,15 +3,14 @@ export default function Suggested({
   setShowSuggested,
   setCoords,
   setSearch,
+  formatFind,
 }) {
-  const apiAdress = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&SingleLine=${encodeURIComponent(
-    text
-  )}`;
+  const adress = formatFind(text);
 
   async function getAdress() {
     setShowSuggested(false);
     try {
-      const resp = await fetch(apiAdress);
+      const resp = await fetch(adress);
       const data = await resp.json();
       console.log(data.candidates[0].location);
       setCoords([data.candidates[0].location.y, data.candidates[0].location.x]);

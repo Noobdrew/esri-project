@@ -11,6 +11,7 @@ function App() {
   const [showSuggested, setShowSuggested] = useState(false);
   const [coords, setCoords] = useState([0, 0]);
   const [currCenter, setCurrCenter] = useState([0, 0]);
+
   const apiSuggested = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?f=json&text=${search}`;
   const apiFind = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&SingleLine=`;
 
@@ -47,6 +48,7 @@ function App() {
             setSearch={setSearch}
             setShowSuggested={setShowSuggested}
             setCoords={setCoords}
+            formatFind={formatFind}
           />
         );
       })
@@ -58,10 +60,25 @@ function App() {
     setShowSuggested(true);
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const resp = await fetch(formatFind(search));
+      const data = await resp.json();
+
+      setSearch(data.candidates[0].address);
+      setCoords([data.candidates[0].location.y, data.candidates[0].location.x]);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setShowSuggested(false);
+    }
+  }
+
   return (
     <div className="site-wrapper">
       <div className="input-container">
-        <form action="">
+        <form action="" onSubmit={handleSubmit}>
           <input
             type="text"
             value={search}
