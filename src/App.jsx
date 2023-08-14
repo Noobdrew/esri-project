@@ -1,5 +1,5 @@
-import { memo, useEffect, useState } from "react";
-import searchImg from "./assets/search-img.png";
+import React, { memo, useEffect, useState } from "react";
+import searchImg from "./search-img.png";
 import "./App.css";
 import Suggested from "./Suggested";
 import EmbeddedMap from "./EmbeddedMap";

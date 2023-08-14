@@ -1,5 +1,6 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+import React from "react";
 
 export default function EmbeddedMap({ initialCenter, name }) {
   // Component to change the view of the map
