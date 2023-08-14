@@ -110,7 +110,7 @@ function App() {
 
       setSearch(data.candidates[0].address);
       setCoords([location.y, location.x]);
-      setMapName(search);
+      setMapName(data.candidates[0].address);
     } catch (err) {
       console.log(err);
     } finally {

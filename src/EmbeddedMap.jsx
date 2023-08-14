@@ -1,8 +1,14 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import mapMarker from "./map-marker.png";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import React from "react";
+import { Icon } from "leaflet";
 
 export default function EmbeddedMap({ initialCenter, name }) {
+  const customIcon = new Icon({
+    iconUrl: mapMarker,
+    iconSize: [32, 32], // Specify the width and height of the icon
+  });
   // Component to change the view of the map
   function ChangeView({ center, zoom }) {
     const map = useMap();
@@ -22,7 +28,7 @@ export default function EmbeddedMap({ initialCenter, name }) {
 
       {/* Add other map components like markers, popups, etc. */}
       {name && (
-        <Marker position={initialCenter}>
+        <Marker position={initialCenter} icon={customIcon}>
           <Popup>{name}</Popup>
         </Marker>
       )}
