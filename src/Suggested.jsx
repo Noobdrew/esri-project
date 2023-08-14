@@ -4,23 +4,27 @@ export default function Suggested({
   setCoords,
   setSearch,
   formatFind,
+  setMapName,
 }) {
-  const adress = formatFind(text);
+  // Format the address API URL
+  const addressApiUrl = formatFind(text);
 
-  async function getAdress() {
+  // Fetch and set address details when a suggestion is clicked
+  async function handleSuggestionClick() {
     setShowSuggested(false);
     try {
-      const resp = await fetch(adress);
-      const data = await resp.json();
-      console.log(data.candidates[0].location);
-      setCoords([data.candidates[0].location.y, data.candidates[0].location.x]);
+      const responce = await fetch(addressApiUrl);
+      const data = await responce.json();
+      const location = data.candidates[0].location;
+      setCoords([location.y, location.x]);
       setSearch(text);
+      setMapName(text);
     } catch (err) {
       console.log(err);
     }
   }
   return (
-    <h4 className="suggested-text" onClick={getAdress}>
+    <h4 className="suggested-text" onClick={handleSuggestionClick}>
       {text}
     </h4>
   );
